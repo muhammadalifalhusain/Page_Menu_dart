@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'menu_page.dart'; 
+import 'splashScreen/splash_screen.dart';
 
 void main() {
   runApp(MyApp());
@@ -9,13 +9,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Meuble',
+      title: 'test app',
       theme: ThemeData(
-        primarySwatch: Colors.orange,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
+        primarySwatch: Colors.deepOrange,
       ),
-      home: MenuPage(), 
+      home: SplashScreen(), // Ganti halaman utama dengan SplashScreen
     );
   }
 }

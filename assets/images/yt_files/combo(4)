@@ -1,0 +1,1 @@
+!function(n){"use strict";var i=n.YAHOO=n.YAHOO||{},t=i.SP=i.SP||{};function o(){}o.prototype={initializer:function(){},add:function(n,i){this.set(n,i)}},t.i18n=o,i.AssetManager.afterDownload(function(){i.i18n=t.create(t.i18n)})}(window);
