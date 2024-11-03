@@ -7,14 +7,13 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Login App',
       theme: ThemeData(
         primarySwatch: Colors.teal,
-        scaffoldBackgroundColor: Colors.white,
+        scaffoldBackgroundColor: const Color(0xFFF0EB8F),
       ),
       home: LoginPage(),
     );
@@ -38,7 +37,6 @@ class _LoginPageState extends State<LoginPage> {
 
     if (_usernameController.text == storedUsername &&
         _passwordController.text == storedPassword) {
-      // Navigate to MenuPage on successful login
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (context) => MenuPage()),
       );
@@ -62,9 +60,16 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Login'),
+        title: Text(
+          'AlHusain Furniture',
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+            color: const Color(0xFFF0EB8F),
+          ),
+        ),
         centerTitle: true,
-        backgroundColor: Colors.teal,
+        backgroundColor: const Color(0xFF944645),
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -73,21 +78,20 @@ class _LoginPageState extends State<LoginPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SizedBox(height: 40),
-              Text(
-                'Welcome to Alhusain',
-                style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Colors.teal),
-              ),
               SizedBox(height: 20),
               TextField(
                 controller: _usernameController,
                 decoration: InputDecoration(
                   labelText: 'Username',
+                  labelStyle: TextStyle(
+                    color: const Color(0xFFF0EB8F), // Warna label
+                  ),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(30),
                     borderSide: BorderSide(color: Colors.teal),
                   ),
                   filled: true,
-                  fillColor: Colors.white,
+                  fillColor: const Color(0xFF944645), // Warna background
                   contentPadding: EdgeInsets.symmetric(horizontal: 20),
                 ),
               ),
@@ -96,12 +100,15 @@ class _LoginPageState extends State<LoginPage> {
                 controller: _passwordController,
                 decoration: InputDecoration(
                   labelText: 'Password',
+                  labelStyle: TextStyle(
+                    color: const Color(0xFFF0EB8F), // Warna label
+                  ),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(30),
                     borderSide: BorderSide(color: Colors.teal),
                   ),
                   filled: true,
-                  fillColor: Colors.white,
+                  fillColor: const Color(0xFF944645), // Warna background
                   contentPadding: EdgeInsets.symmetric(horizontal: 20),
                 ),
                 obscureText: true,
@@ -114,11 +121,11 @@ class _LoginPageState extends State<LoginPage> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30),
                   ),
-                  backgroundColor: Colors.teal,
-                  shadowColor: Colors.tealAccent,
+                  backgroundColor: const Color(0xFF944645), 
+                 
                   elevation: 5,
                 ),
-                child: Text('Login', style: TextStyle(color: Colors.white)),
+                child: Text('Login', style: TextStyle(color: const Color(0xFFF0EB8F))),
               ),
               SizedBox(height: 10),
               ElevatedButton(
@@ -128,11 +135,11 @@ class _LoginPageState extends State<LoginPage> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30),
                   ),
-                  backgroundColor: Colors.teal,
-                  shadowColor: Colors.tealAccent,
+                  backgroundColor: const Color(0xFF944645), // Warna tombol
+                  
                   elevation: 5,
                 ),
-                child: Text('Buat Akun', style: TextStyle(color: Colors.white)),
+                child: Text('Daftar', style: TextStyle(color: const Color(0xFFF0EB8F))),
               ),
               SizedBox(height: 20),
               if (_message != null) 

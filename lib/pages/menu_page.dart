@@ -3,6 +3,8 @@ import 'package:intl/intl.dart';
 import '../models/menu_model.dart';
 import '../widgets/form_pembayaran.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'login_page.dart';
 
 class MenuPage extends StatefulWidget {
   @override
@@ -20,11 +22,12 @@ class _MenuPageState extends State<MenuPage> {
   void initState() {
     super.initState();
     listMenu = [
-      Menu(nama: 'Interior1', deskripsi: 'Klasikal Room', harga: 20000, gambar: 'assets/images/foto1.jpg'),
-      Menu(nama: 'Interior2', deskripsi: 'Elegant Room', harga: 15000, gambar: 'assets/images/foto2.jpg'),
-      Menu(nama: 'Interior3', deskripsi: 'Minimalist Room', harga: 18000, gambar: 'assets/images/foto3.jpg'),
-      Menu(nama: 'Interior4', deskripsi: 'Comfortable Room', harga: 25000, gambar: 'assets/images/foto4.jpg'),
-      Menu(nama: 'Interior5', deskripsi: 'Futuristik', harga: 3000, gambar: 'assets/images/foto5.jpg'),
+      Menu(nama: 'RuangTamu', deskripsi: 'Klasikal Room', harga: 23000000, gambar: 'assets/images/foto1.jpg'),
+      Menu(nama: 'RuangKeluarga', deskripsi: 'Elegant Room', harga: 15000000, gambar: 'assets/images/foto2.jpg'),
+      Menu(nama: 'RuangSantai', deskripsi: 'Minimalist Room', harga: 18000000, gambar: 'assets/images/foto3.jpg'),
+      Menu(nama: 'RuangTV', deskripsi: 'Comfortable Room', harga: 10000000, gambar: 'assets/images/foto4.jpg'),
+      Menu(nama: 'KursiKekinian', deskripsi: 'Futuristik', harga: 10000000, gambar: 'assets/images/foto5.jpg'),
+      Menu(nama: 'RuangKumpul', deskripsi: 'Futuristik', harga: 3000000, gambar: 'assets/images/foto3.jpg'),
     ];
   }
 
@@ -33,6 +36,79 @@ class _MenuPageState extends State<MenuPage> {
       totalJual += harga;
     });
   }
+
+  void _updateUserAndPassword() async {
+  // Controllers untuk input username dan password baru
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  // Global key untuk form
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  // Menampilkan dialog untuk memasukkan username dan password baru
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text('Update User & Password'),
+        content: Form(
+          key: _formKey,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              TextFormField(
+                controller: _usernameController,
+                decoration: InputDecoration(labelText: 'Username Baru'),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Harap isi data'; // Pesan kesalahan jika kosong
+                  }
+                  return null; // Tidak ada kesalahan
+                },
+              ),
+              TextFormField(
+                controller: _passwordController,
+                decoration: InputDecoration(labelText: 'Password Baru'),
+                obscureText: true,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Harap isi data'; // Pesan kesalahan jika kosong
+                  }
+                  return null; // Tidak ada kesalahan
+                },
+              ),
+            ],
+          ),
+        ),
+        actions: <Widget>[
+          TextButton(
+            child: Text('Simpan'),
+            onPressed: () async {
+              if (_formKey.currentState?.validate() ?? false) {
+                final prefs = await SharedPreferences.getInstance();
+                // Menyimpan username dan password baru
+                await prefs.setString('username', _usernameController.text);
+                await prefs.setString('password', _passwordController.text);
+                Navigator.of(context).pop(); // Menutup dialog
+                // Redirect ke halaman login
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (context) => LoginPage()),
+                );
+              }
+            },
+          ),
+          TextButton(
+            child: Text('Batal'),
+            onPressed: () {
+              Navigator.of(context).pop(); // Menutup dialog
+            },
+          ),
+        ],
+      );
+    },
+  );
+}
+
 
   void showDeskripsiDialog(Menu menu) {
     showDialog(
@@ -57,19 +133,60 @@ class _MenuPageState extends State<MenuPage> {
   void handleMenuOption(String value) {
     switch (value) {
       case 'Call Center':
-        print('Menghubungi Call Center...');
+        _showCallCenterDialog(context);
         break;
       case 'SMS Center':
-        print('Mengirim SMS...');
+        _showSmsCenterDialog(context);
         break;
       case 'Lokasi/Maps':
         _openGoogleMaps();
         break;
       case 'Update User & Password':
-        print('Update User & Password...');
+        _updateUserAndPassword();
         break;
     }
   }
+
+ void _showSmsCenterDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('SMS Center'),
+          content: Text('0802-3456-7870'),
+          actions: <Widget>[
+            TextButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop(); // Tutup dialog
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+    void _showCallCenterDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Call Center'),
+          content: Text('0812-3456-7890'),
+          actions: <Widget>[
+            TextButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop(); // Tutup dialog
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
 
   void _openGoogleMaps() async {
   const String googleMapsUrl = 'https://maps.app.goo.gl/YCXT4wbUkkGMBLqQ8'; // URL Google Maps
@@ -99,8 +216,14 @@ class _MenuPageState extends State<MenuPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Produk :'),
-        backgroundColor: Colors.deepOrangeAccent,
+          title: Text(
+          'Produk ',
+          style: TextStyle(
+          color: const Color(0xFFF0EB8F), // Mengatur warna teks
+        ),
+      ),
+        
+        backgroundColor: const Color(0xFF944645),
         actions: [
           PopupMenuButton<String>(
             onSelected: handleMenuOption,
@@ -129,6 +252,7 @@ class _MenuPageState extends State<MenuPage> {
           itemBuilder: (BuildContext context, int index) {
             return Card(
               elevation: 5,
+              color: const Color(0xFF944645),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(15),
               ),
@@ -164,7 +288,7 @@ class _MenuPageState extends State<MenuPage> {
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
-                              color: Colors.deepOrangeAccent,
+                              color: const Color(0xFFF0EB8F),
                             ),
                           ),
                         ),
@@ -174,7 +298,7 @@ class _MenuPageState extends State<MenuPage> {
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
-                            color: Colors.green[700],
+                            color: const Color(0xFFF0EB8F),
                           ),
                         ),
                       ],
@@ -194,12 +318,12 @@ class _MenuPageState extends State<MenuPage> {
           onTap: showPaymentForm, 
           child: Container(
             padding: EdgeInsets.symmetric(vertical: 10),
-            color: Colors.deepOrangeAccent,
+            color: const Color(0xFF944645),
             child: Center(
               child: Text(
-                'Pembayaran: ${currencyFormat.format(totalJual)}', 
+                '${currencyFormat.format(totalJual)}', 
                 style: TextStyle(
-                  color: Colors.white,
+                  color: const Color(0xFFF0EB8F),
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),
