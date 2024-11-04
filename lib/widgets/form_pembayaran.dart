@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-void showFormPembayaran(BuildContext context) {
-  final _formKey = GlobalKey<FormState>(); // Menambahkan GlobalKey untuk form
+void showFormPembayaran(BuildContext context, VoidCallback resetTotalJual) {
+  final _formKey = GlobalKey<FormState>();
   String? namaPembeli;
   String? nomorTelepon;
   String? metodePembayaran;
@@ -15,7 +15,7 @@ void showFormPembayaran(BuildContext context) {
       return Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
-          key: _formKey, // Menyimpan key form
+          key: _formKey,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -86,18 +86,27 @@ void showFormPembayaran(BuildContext context) {
               ElevatedButton(
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
-                    _formKey.currentState!.save(); 
+                    _formKey.currentState!.save();
                     Navigator.pop(context);
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                        content: Text("Pembayaran berhasil!"),
-                        backgroundColor: Colors.green,
+                        content: Text("Pembayaran berhasil!",
+                        style: TextStyle(
+                        color: Colors.yellow, // Mengatur warna teks menjadi kuning
+                        ),
+                        ),
+                        
+                        backgroundColor: const Color(0xFF944645),
                       ),
                     );
+
+                    // Panggil fungsi reset totalJual setelah pembayaran berhasil
+                    resetTotalJual();
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text("Harap lengkapi semua field!"),
+                        
                         backgroundColor: Colors.red,
                       ),
                     );
