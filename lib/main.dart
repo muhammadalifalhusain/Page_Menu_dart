@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
       title: 'test app',
       theme: ThemeData(
         primarySwatch: Colors.deepOrange,
-      ),
+        ),
       home: SplashScreen(), // Ganti halaman utama dengan SplashScreen
     );
   }
