@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-void showFormPembayaran(BuildContext context, VoidCallback resetTotalJual) {
+void showFormPembayaran(BuildContext context, VoidCallback resetTotalJual, double totalHarga) {
   final _formKey = GlobalKey<FormState>();
   String? namaPembeli;
-  String? nomorTelepon;
+  double? jumlahBayar;
   String? metodePembayaran;
 
   showModalBottomSheet(
@@ -46,17 +46,22 @@ void showFormPembayaran(BuildContext context, VoidCallback resetTotalJual) {
               SizedBox(height: 10),
               TextFormField(
                 decoration: InputDecoration(
-                  labelText: "Nomor Telepon",
+                  labelText: "Jumlah Bayar",
                   border: OutlineInputBorder(),
                 ),
+                keyboardType: TextInputType.number,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Nomor Telepon tidak boleh kosong';
+                    return 'Jumlah Bayar tidak boleh kosong';
+                  }
+                  double bayar = double.tryParse(value)!;
+                  if (bayar < totalHarga) {
+                    return 'Maaf, uang anda kurang';
                   }
                   return null;
                 },
                 onSaved: (value) {
-                  nomorTelepon = value;
+                  jumlahBayar = double.tryParse(value!);
                 },
               ),
               SizedBox(height: 10),
@@ -90,12 +95,10 @@ void showFormPembayaran(BuildContext context, VoidCallback resetTotalJual) {
                     Navigator.pop(context);
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                        content: Text("Pembayaran berhasil!",
-                        style: TextStyle(
-                        color: Colors.yellow, // Mengatur warna teks menjadi kuning
+                        content: Text(
+                          "Pembayaran berhasil!",
+                          style: TextStyle(color: Colors.yellow),
                         ),
-                        ),
-                        
                         backgroundColor: const Color(0xFF944645),
                       ),
                     );
@@ -106,7 +109,6 @@ void showFormPembayaran(BuildContext context, VoidCallback resetTotalJual) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text("Harap lengkapi semua field!"),
-                        
                         backgroundColor: Colors.red,
                       ),
                     );

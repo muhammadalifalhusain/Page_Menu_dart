@@ -14,6 +14,7 @@ class MenuPage extends StatefulWidget {
 
 class _MenuPageState extends State<MenuPage> {
   List<Menu> listMenu = [];
+  List<Menu> produkDipilih = []; 
   double totalJual = 0.0;
 
   // Inisialisasi NumberFormat
@@ -219,6 +220,7 @@ void showDeskripsiDialog(BuildContext context, Menu menu) {
 
     }
   }
+  
 
  void _showSmsCenterDialog(BuildContext context) async {
   final String phoneNumber = '+62882006826730';
@@ -310,9 +312,10 @@ void _showCallCenterDialog(BuildContext context) async {
     throw 'Could not launch $googleMapsUrl';
   }
 }
+
   void showPaymentForm() {
   if (totalJual > 0) {
-    showFormPembayaran(context, resetTotalJual);
+    showFormPembayaran(context, resetTotalJual, totalJual); // Menambahkan totalJual sebagai argumen
   } else {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -322,6 +325,8 @@ void _showCallCenterDialog(BuildContext context) async {
     );
   }
 }
+
+
 
 
   @override
