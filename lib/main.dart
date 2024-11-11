@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'splashScreen/splash_screen.dart';
-import 'pages/menu_page.dart';
+
 
 
 void main() {
