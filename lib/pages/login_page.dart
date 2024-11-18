@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../pages/menu_page.dart';
+import '../helpers/dabase_helper.dart';
 
 void main() {
   runApp(MyApp());
@@ -30,13 +30,25 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _passwordController = TextEditingController();
   String? _message;
 
-  Future<void> _login() async {
-    final prefs = await SharedPreferences.getInstance();
-    final storedUsername = prefs.getString('username');
-    final storedPassword = prefs.getString('password');
+  final DatabaseHelper _dbHelper = DatabaseHelper.instance;
 
-    if (_usernameController.text == storedUsername &&
-        _passwordController.text == storedPassword) {
+  // Fungsi login untuk memverifikasi username dan password
+  Future<void> _login() async {
+    final username = _usernameController.text;
+    final password = _passwordController.text;
+
+    if (username.isEmpty || password.isEmpty) {
+      setState(() {
+        _message = 'Username and Password cannot be empty!';
+      });
+      return;
+    }
+
+    // Cek apakah ada user yang cocok di database
+    final user = await _dbHelper.login(username, password);
+
+    if (user != null) {
+      // Jika berhasil login, navigasi ke MenuPage
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (context) => MenuPage()),
       );
@@ -47,13 +59,29 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
+  // Fungsi createUser untuk menyimpan username dan password
   Future<void> _createUser() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('username', _usernameController.text);
-    await prefs.setString('password', _passwordController.text);
-    setState(() {
-      _message = 'Berhasil membuat akun, Silahkan Login';
-    });
+    final username = _usernameController.text;
+    final password = _passwordController.text;
+
+    if (username.isEmpty || password.isEmpty) {
+      setState(() {
+        _message = 'Please enter both username and password!';
+      });
+      return;
+    }
+
+    try {
+      // Menyimpan user ke database
+      await _dbHelper.createUser(username, password);
+      setState(() {
+        _message = 'User created successfully, please login!';
+      });
+    } catch (e) {
+      setState(() {
+        _message = 'Error creating user, try another username!';
+      });
+    }
   }
 
   @override
@@ -121,11 +149,11 @@ class _LoginPageState extends State<LoginPage> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30),
                   ),
-                  backgroundColor: const Color(0xFF944645), 
-                 
+                  backgroundColor: const Color(0xFF944645),
                   elevation: 5,
                 ),
-                child: Text('Login', style: TextStyle(color: const Color(0xFFF0EB8F))),
+                child: Text('Login',
+                    style: TextStyle(color: const Color(0xFFF0EB8F))),
               ),
               SizedBox(height: 10),
               ElevatedButton(
@@ -136,16 +164,17 @@ class _LoginPageState extends State<LoginPage> {
                     borderRadius: BorderRadius.circular(30),
                   ),
                   backgroundColor: const Color(0xFF944645), // Warna tombol
-                  
                   elevation: 5,
                 ),
-                child: Text('Daftar', style: TextStyle(color: const Color(0xFFF0EB8F))),
+                child: Text('Daftar',
+                    style: TextStyle(color: const Color(0xFFF0EB8F))),
               ),
               SizedBox(height: 20),
-              if (_message != null) 
+              if (_message != null)
                 Text(
                   _message!,
-                  style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+                  style:
+                      TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
                 ),
             ],
           ),
