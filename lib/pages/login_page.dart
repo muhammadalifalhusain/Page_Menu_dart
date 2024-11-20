@@ -33,56 +33,58 @@ class _LoginPageState extends State<LoginPage> {
   final DatabaseHelper _dbHelper = DatabaseHelper.instance;
 
   // Fungsi login untuk memverifikasi username dan password
-  Future<void> _login() async {
-    final username = _usernameController.text;
-    final password = _passwordController.text;
+ Future<void> _login() async {
+  final username = _usernameController.text;
+  final password = _passwordController.text;
 
-    if (username.isEmpty || password.isEmpty) {
-      setState(() {
-        _message = 'Username and Password cannot be empty!';
-      });
-      return;
-    }
-
-    // Cek apakah ada user yang cocok di database
-    final user = await _dbHelper.login(username, password);
-
-    if (user != null) {
-      // Jika berhasil login, navigasi ke MenuPage
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => MenuPage()),
-      );
-    } else {
-      setState(() {
-        _message = 'Invalid username or password!';
-      });
-    }
+  if (username.isEmpty || password.isEmpty) {
+    setState(() {
+      _message = 'Username and Password cannot be empty!';
+    });
+    return;
   }
+
+  // Cek apakah ada user yang cocok di database
+  final user = await _dbHelper.login(username, password);
+
+  if (user != null) {
+    // Jika berhasil login, navigasi ke MenuPage
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(builder: (context) => MenuPage()),
+    );
+  } else {
+    setState(() {
+      _message = 'Invalid username or password!';
+    });
+  }
+}
+
 
   // Fungsi createUser untuk menyimpan username dan password
-  Future<void> _createUser() async {
-    final username = _usernameController.text;
-    final password = _passwordController.text;
+Future<void> _createUser() async {
+  final username = _usernameController.text;
+  final password = _passwordController.text;
 
-    if (username.isEmpty || password.isEmpty) {
-      setState(() {
-        _message = 'Please enter both username and password!';
-      });
-      return;
-    }
-
-    try {
-      // Menyimpan user ke database
-      await _dbHelper.createUser(username, password);
-      setState(() {
-        _message = 'User created successfully, please login!';
-      });
-    } catch (e) {
-      setState(() {
-        _message = 'Error creating user, try another username!';
-      });
-    }
+  if (username.isEmpty || password.isEmpty) {
+    setState(() {
+      _message = 'Please enter both username and password!';
+    });
+    return;
   }
+
+  try {
+    // Menyimpan user ke database
+    await _dbHelper.createUser(username, password);
+    setState(() {
+      _message = 'User created successfully, please login!';
+    });
+  } catch (e) {
+    setState(() {
+      _message = 'Error: ${e.toString()}'; // Menampilkan pesan error yang lebih jelas
+    });
+  }
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -106,7 +108,7 @@ class _LoginPageState extends State<LoginPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SizedBox(height: 40),
-              SizedBox(height: 20),
+              // Input Username
               TextField(
                 controller: _usernameController,
                 decoration: InputDecoration(
@@ -124,6 +126,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
               SizedBox(height: 15),
+              // Input Password
               TextField(
                 controller: _passwordController,
                 decoration: InputDecoration(
@@ -142,6 +145,7 @@ class _LoginPageState extends State<LoginPage> {
                 obscureText: true,
               ),
               SizedBox(height: 20),
+              // Tombol Login
               ElevatedButton(
                 onPressed: _login,
                 style: ElevatedButton.styleFrom(
@@ -156,6 +160,7 @@ class _LoginPageState extends State<LoginPage> {
                     style: TextStyle(color: const Color(0xFFF0EB8F))),
               ),
               SizedBox(height: 10),
+              // Tombol Daftar
               ElevatedButton(
                 onPressed: _createUser,
                 style: ElevatedButton.styleFrom(
@@ -163,13 +168,14 @@ class _LoginPageState extends State<LoginPage> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30),
                   ),
-                  backgroundColor: const Color(0xFF944645), // Warna tombol
+                  backgroundColor: const Color(0xFF944645),
                   elevation: 5,
                 ),
                 child: Text('Daftar',
                     style: TextStyle(color: const Color(0xFFF0EB8F))),
               ),
               SizedBox(height: 20),
+              // Pesan kesalahan atau sukses
               if (_message != null)
                 Text(
                   _message!,

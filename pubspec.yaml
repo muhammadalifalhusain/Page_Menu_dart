@@ -30,8 +30,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  sqflite: any
-  path_provider: any
+  sqflite: ^2.0.0+4
+  path: ^1.8.0
   intl: ^0.19.0 # Versi terbaru
   shared_preferences: ^2.1.0 # Update ke versi terbaru
   url_launcher: ^6.3.1 # Update ke versi terbaru

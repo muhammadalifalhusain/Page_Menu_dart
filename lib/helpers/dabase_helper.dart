@@ -43,16 +43,31 @@ class DatabaseHelper {
           ''');
   }
 
-  // Fungsi untuk menambah user baru
-  Future<int> createUser(String username, String password) async {
-    Database db = await instance.database;
-    var result = await db.insert(
-      table,
-      {columnUsername: username, columnPassword: password},
-      conflictAlgorithm: ConflictAlgorithm.replace,
-    );
-    return result;
+Future<int> createUser(String username, String password) async {
+  Database db = await instance.database;
+
+  // Cek apakah username sudah ada
+  List<Map<String, Object?>> result = await db.query(
+    table,
+    where: '$columnUsername = ?',
+    whereArgs: [username],
+  );
+
+  if (result.isNotEmpty) {
+    // Jika username sudah ada, lempar error
+    throw Exception('Username already exists!');
   }
+
+  // Jika username belum ada, tambahkan user baru
+  int id = await db.insert(
+    table,
+    {columnUsername: username, columnPassword: password},
+    conflictAlgorithm: ConflictAlgorithm.replace,
+  );
+
+  return id; // Mengembalikan id yang baru dimasukkan
+}
+
 
   // Fungsi untuk login dan memverifikasi username dan password
   Future<Map<String, dynamic>?> login(String username, String password) async {
