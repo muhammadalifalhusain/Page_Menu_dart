@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../pages/menu_page.dart';
-import '../helpers/dabase_helper.dart';
+import '../helpers/database_helper.dart';
 
 void main() {
   runApp(MyApp());

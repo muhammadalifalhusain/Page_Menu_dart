@@ -1,9 +1,16 @@
 import 'package:flutter/material.dart';
 import 'splashScreen/splash_screen.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+import 'dart:io';
+import './helpers/database_helper.dart';
 
 
 
 void main() {
+  if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+    sqfliteFfiInit();
+    databaseFactory = databaseFactoryFfi;
+  }
   runApp(MyApp());
 }
 
